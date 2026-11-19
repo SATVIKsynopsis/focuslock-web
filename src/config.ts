@@ -19,8 +19,8 @@ export const site = {
   },
 
   analytics: {
-    provider: "none" as "none" | "goatcounter" | "plausible",
-    id: "TODO_ANALYTICS_ID",
+    provider: "goatcounter" as "none" | "goatcounter" | "plausible",
+    id: "focuslock",
   },
 
   url: "https://focuslock-web-five.vercel.app",
