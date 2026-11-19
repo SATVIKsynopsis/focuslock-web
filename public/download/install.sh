@@ -2,7 +2,7 @@
 set -euo pipefail
 
 main() {
-    local base_url="${FOCUSLOCK_BASE_URL:-http://localhost:4321/download}"
+    local base_url="${FOCUSLOCK_BASE_URL:-https://focuslock-web-five.vercel.app/download}"
     local app_name="FocusLock"
     local bundle_id="dev.focuslock.FocusLock"
 

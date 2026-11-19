@@ -23,7 +23,7 @@ export const site = {
     id: "TODO_ANALYTICS_ID",
   },
 
-  url: "TODO_SITE_URL",
+  url: "https://focuslock-web-five.vercel.app",
 } as const;
 
 export const isPlaceholder = (value: string | undefined): boolean =>
