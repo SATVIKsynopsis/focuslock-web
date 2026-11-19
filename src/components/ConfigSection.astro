@@ -1,0 +1,59 @@
+---
+import SectionHead from "./SectionHead.astro";
+---
+
+<section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 sm:py-32" aria-labelledby="config-title">
+  <SectionHead num="04" kicker="config" id="config-title">
+    It's a TOML file. <span class="text-muted">Obviously.</span>
+  </SectionHead>
+
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-16">
+    <div class="space-y-6 text-lg leading-relaxed text-muted">
+      <p>Everything lives in <code class="inline">~/.config/focuslock/config.toml</code>. Commit it to your dotfiles, diff it, grep it.</p>
+      <p>Prefer clicking? <strong class="text-ink">Settings</strong> in the app lists your installed apps with checkboxes, and it writes the same file.</p>
+      <p class="text-base">Find any app's bundle ID with:</p>
+      <pre class="hint-cmd"><code>osascript -e 'id of app "Visual Studio Code"'</code></pre>
+    </div>
+
+    <figure class="editor">
+      <figcaption class="editor-bar">
+        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="file">~/.config/focuslock/config.toml</span>
+      </figcaption>
+      <pre class="code"><code><span class="c"># Apps you can switch between during a session.</span>
+<span class="k">allowed_apps</span> = [
+  <span class="s">"com.microsoft.VSCode"</span>,
+  <span class="s">"net.sourceforge.skim-app.skim"</span>,
+  <span class="s">"com.apple.Terminal"</span>,
+  <span class="s">"com.google.Chrome"</span>,
+]
+
+<span class="c"># Sites allowed in Chrome. Subdomains included.</span>
+<span class="k">allowed_domains</span> = [
+  <span class="s">"docs.rs"</span>, <span class="s">"doc.rust-lang.org"</span>,
+  <span class="s">"github.com"</span>, <span class="s">"stackoverflow.com"</span>,
+  <span class="s">"localhost"</span>,
+]
+
+<span class="c"># The escape hatch.</span>
+<span class="k">max_passes</span> = <span class="n">3</span>          <span class="c"># per session</span>
+<span class="k">pass_minutes</span> = <span class="n">2</span>
+<span class="k">min_reason_chars</span> = <span class="n">10</span>   <span class="c"># "because" won't cut it</span></code></pre>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .inline { font: 0.85em var(--font-mono); color: var(--color-ink); background: var(--color-surface-2); border: 1px solid var(--color-line); padding: 0.1em 0.4em; border-radius: 6px; }
+  .hint-cmd { font: 13px var(--font-mono); color: var(--color-ink); background: #08080a; border: 1px solid var(--color-line); border-radius: 10px; padding: 12px 14px; overflow-x: auto; }
+  .editor { margin: 0; border: 1px solid var(--color-line); border-radius: 16px; overflow: hidden; background: #0c0c0e; box-shadow: 0 30px 80px -40px rgb(0 0 0 / 0.9); }
+  .editor-bar { display: flex; align-items: center; gap: 14px; padding: 11px 14px; background: #161619; border-bottom: 1px solid var(--color-line); }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; background: #3a3a40; }
+  .file { font: 12px var(--font-mono); color: var(--color-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .code { margin: 0; padding: 20px 22px; overflow-x: auto; font: 13.5px/1.75 var(--font-mono); color: #d6d6d2; }
+  .code .c { color: #8e8e94; }
+  .code .k { color: var(--color-lime); }
+  .code .s { color: #ffb38a; }
+  .code .n { color: #9ad7ff; }
+</style>

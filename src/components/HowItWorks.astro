@@ -1,0 +1,98 @@
+---
+import SectionHead from "./SectionHead.astro";
+---
+
+<section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 sm:py-32" aria-labelledby="how-title">
+  <SectionHead num="02" kicker="how it works" id="how-title">
+    Three steps. <span class="text-muted">Zero willpower.</span>
+  </SectionHead>
+
+  <ol class="steps grid gap-4 md:grid-cols-3">
+    <li class="step">
+      <div class="visual">
+        <div class="chips">
+          <span class="chip on">✓ Editor</span>
+          <span class="chip on">✓ PDF Reader</span>
+          <span class="chip on">✓ Terminal</span>
+          <span class="chip on">✓ docs.rs</span>
+          <span class="chip">Video</span>
+          <span class="chip">Chat</span>
+        </div>
+      </div>
+      <p class="num">01</p>
+      <h3>Pick your allowlist</h3>
+      <p class="desc">Tick the apps and sites you work in. Everything else is off-limits by default, so there's no blocklist to maintain.</p>
+    </li>
+    <li class="step">
+      <div class="visual">
+        <div class="menubar">
+          <span class="mb-dim">File&nbsp; Edit&nbsp; View</span>
+          <span class="mb-timer">🔒 25:00</span>
+        </div>
+        <div class="menu">
+          <span class="menu-item is-hl">Start 25 min</span>
+          <span class="menu-item">Start 50 min</span>
+        </div>
+      </div>
+      <p class="num">02</p>
+      <h3>Start a session</h3>
+      <p class="desc">One click in the menu bar. The countdown sits up there, quietly, while you work.</p>
+    </li>
+    <li class="step">
+      <div class="visual">
+        <div class="toast">
+          <span class="toast-icon">✕</span>
+          <span><b>Nope. 24 min left.</b><br />Video is blocked during your focus session.</span>
+        </div>
+      </div>
+      <p class="num">03</p>
+      <h3>Get bounced</h3>
+      <p class="desc">Switch to anything off the list and it vanishes. You land back in the last app you were allowed to be in.</p>
+    </li>
+  </ol>
+</section>
+
+<style>
+  .step {
+    position: relative; display: flex; flex-direction: column; gap: 8px;
+    background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 18px; padding: 20px 22px 26px;
+  }
+  .visual {
+    height: 170px; margin-bottom: 14px; border-radius: 12px; display: grid; place-items: center; padding: 16px;
+    background: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 0) 0 0 / 16px 16px, #0d0d0f;
+    border: 1px solid #222226; overflow: hidden;
+  }
+  .num { font: 700 13px var(--font-mono); color: var(--color-lime); }
+  h3 { font-size: 1.35rem; font-weight: 750; letter-spacing: -0.02em; }
+  .desc { color: var(--color-muted); line-height: 1.55; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 260px; }
+  .chip { font: 500 12px var(--font-mono); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--color-line); color: #8e8e94; }
+  .chip.on { color: var(--color-ink); border-color: rgb(198 255 61 / 0.45); background: rgb(198 255 61 / 0.08); }
+
+  .menubar {
+    width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 8px;
+    background: #1a1a1d; font-size: 12px; align-self: start;
+  }
+  .mb-dim { color: #8e8e94; }
+  .mb-timer { font: 700 12.5px var(--font-mono); color: var(--color-lime); }
+  .menu {
+    justify-self: end; align-self: start; display: grid; min-width: 150px; padding: 5px; margin-top: -6px;
+    background: #222226; border: 1px solid #333338; border-radius: 9px; font-size: 12.5px;
+  }
+  .menu-item { padding: 4px 10px; border-radius: 5px; color: #c9c9cc; }
+  .menu-item.is-hl { background: var(--color-lime); color: var(--color-bg); font-weight: 600; }
+
+  .toast {
+    display: flex; gap: 12px; align-items: center; max-width: 280px; padding: 11px 14px; border-radius: 12px;
+    background: #242428; border: 1px solid #333338; font-size: 12.5px; line-height: 1.4; color: #b5b5b8;
+    box-shadow: 0 14px 40px -12px rgb(0 0 0 / 0.8); rotate: -2deg;
+  }
+  .toast b { color: var(--color-ink); }
+  .toast-icon {
+    flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center;
+    background: #0a0a0b; color: var(--color-danger); box-shadow: 0 0 0 1.5px var(--color-danger); font-weight: 700;
+  }
+  .step:nth-child(3):hover .toast { animation: nope 0.4s ease-in-out; }
+  @keyframes nope { 25% { translate: -6px 0; } 50% { translate: 5px 0; } 75% { translate: -3px 0; } }
+</style>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  num: string;
+  kicker: string;
+  id: string;
+}
+const { num, kicker, id } = Astro.props;
+---
+
+<div class="mb-12 sm:mb-16">
+  <p class="eyebrow"><span class="text-lime">{num}</span> / {kicker}</p>
+  <h2 id={id} class="section-title mt-4 max-w-[18ch] font-extrabold tracking-[-0.04em] text-balance">
+    <slot />
+  </h2>
+</div>
+
+<style>
+  .section-title {
+    font-size: clamp(2.1rem, 5.6vw, 4.75rem);
+    line-height: 1;
+    padding-bottom: 0.08em;
+  }
+</style>

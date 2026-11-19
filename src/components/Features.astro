@@ -1,0 +1,97 @@
+---
+import SectionHead from "./SectionHead.astro";
+
+const features = [
+  {
+    tag: "bounce-back",
+    title: "Off-list apps bounce",
+    body: "Switch to a distraction and FocusLock hides it and brings back the last allowed app. You never get to scroll.",
+  },
+  {
+    tag: "browser",
+    title: "Website checks in Chrome",
+    body: "The active tab is checked every 1.5 s. A site that isn't allowed gets swapped for a page that shows your time left. Subdomains included.",
+  },
+  {
+    tag: "passes",
+    title: "Passes cost a reason",
+    body: "Really need something? Type why (10+ characters) and get a 2-minute pass. Three per session. Typing it out is usually enough to change your mind.",
+  },
+  {
+    tag: "quit friction",
+    title: "Quitting asks why too",
+    body: "Quit during a session and FocusLock wants a reason first. \"Stop session\" is always there as the honest emergency exit, and it's logged.",
+  },
+  {
+    tag: "local-only",
+    title: "Stats that stay on your Mac",
+    body: "Focus time, sessions, blocked attempts, top distractions. It's all read from a local log file. No account, no analytics, no servers.",
+  },
+  {
+    tag: "native",
+    title: "Tiny, native, Rust",
+    body: "A ~2 MB menu bar app. No Electron, no bundled browser. It sleeps until something actually happens.",
+  },
+];
+---
+
+<section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 sm:py-32" aria-labelledby="features-title">
+  <SectionHead num="03" kicker="features" id="features-title">
+    Built like a dev tool. <span class="text-muted">Because it is one.</span>
+  </SectionHead>
+
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <article class="card big md:col-span-2 lg:col-span-1 lg:row-span-3">
+      <p class="tag">allowlist, not blocklist</p>
+      <h3>List the 5 things you need, not the 5,000 you don't.</h3>
+      <p class="body">Blocklists are a game of whack-a-mole you always lose. FocusLock flips it: anything you didn't allow is blocked.</p>
+      <div class="vs">
+        <div class="col">
+          <p class="col-h">blocklist</p>
+          <ul class="list bad">
+            <li>video site</li><li>social site</li><li>news site</li><li>other video site</li><li>forum</li><li>that new app</li><li>…</li>
+          </ul>
+        </div>
+        <div class="col">
+          <p class="col-h text-lime">allowlist</p>
+          <ul class="list good">
+            <li>editor</li><li>terminal</li><li>pdf reader</li><li>docs.rs</li><li>github.com</li>
+          </ul>
+          <p class="done">done ✓</p>
+        </div>
+      </div>
+    </article>
+    {
+      features.map((f) => (
+        <article class="card">
+          <p class="tag">{f.tag}</p>
+          <h3>{f.title}</h3>
+          <p class="body">{f.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .card {
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 18px; padding: 24px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover { border-color: #3b3b42; transform: translateY(-2px); }
+  .tag { font: 600 11.5px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-lime); }
+  h3 { font-size: 1.3rem; font-weight: 750; letter-spacing: -0.02em; line-height: 1.2; }
+  .body { color: var(--color-muted); line-height: 1.55; }
+  .big h3 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); }
+  .big { background: linear-gradient(180deg, #17171a, var(--color-surface)); }
+
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 18px; }
+  .col { background: #0d0d0f; border: 1px solid #222226; border-radius: 12px; padding: 14px; }
+  .col-h { font: 700 11.5px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 8px; }
+  .list { display: grid; gap: 4px; font: 12.5px var(--font-mono); }
+  .list.bad li { color: #7a7a80; text-decoration: line-through; text-decoration-color: rgb(255 77 46 / 0.6); }
+  .list.good li { color: var(--color-ink); }
+  .list.good li::before { content: "✓ "; color: var(--color-lime); }
+  .done { margin-top: 10px; font: 700 12px var(--font-mono); color: var(--color-lime); }
+</style>

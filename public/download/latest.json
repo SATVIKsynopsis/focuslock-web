@@ -1,0 +1,11 @@
+{
+  "name": "FocusLock",
+  "version": "0.1.0",
+  "minimum_macos": "14.0",
+  "arch": "arm64",
+  "notarized": false,
+  "files": {
+    "FocusLock.dmg": { "sha256": "2cf78a8122e693a5e2df65fa59ad2eb26acd2bca30eae561c475fd7de86a34be", "bytes": 1844571 },
+    "FocusLock.zip": { "sha256": "4aa5e033139a43c350b3ed7440543506a320cd69e0c438667cd515373d63ad1b", "bytes": 1720643 }
+  }
+}

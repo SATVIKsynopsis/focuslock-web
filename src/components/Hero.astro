@@ -1,0 +1,82 @@
+---
+import DownloadCTA from "./DownloadCTA.astro";
+import FakeDesktop from "./FakeDesktop.astro";
+---
+
+<section class="hero relative mx-auto max-w-[1320px] px-4 pt-6 pb-20 sm:px-8 lg:pt-10" aria-labelledby="hero-title">
+  <header class="mb-10 flex items-center justify-between lg:mb-12">
+    <a href="/" class="flex items-center gap-2.5 font-bold tracking-tight">
+      <img src="/favicon.svg" alt="" width="28" height="28" />
+      FocusLock
+    </a>
+    <a href="#install" class="font-mono text-sm text-muted hover:text-lime">install →</a>
+  </header>
+
+  <p class="term font-mono text-sm text-muted sm:text-base" aria-hidden="true">
+    <span class="text-lime">$</span>{" "}<span class="typed">focuslock start --minutes 25</span><span class="caret"></span>
+  </p>
+
+  <h1 id="hero-title" class="headline mt-4 font-extrabold tracking-[-0.045em] text-balance">
+    <span class="line"><span>Switch freely.</span></span>
+    <span class="line"><span>Get blocked from</span></span>
+    <span class="line"><span class="text-lime">everything else.</span></span>
+  </h1>
+
+  <div class="mt-12 grid grid-cols-[minmax(0,1fr)] items-center gap-12 lg:mt-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+    <div class="intro">
+      <p class="text-lg leading-relaxed text-muted sm:text-xl">
+        <strong class="font-semibold text-ink">Focus mode built for developers.</strong>{" "}
+        A macOS menu bar app that lets you hop between your editor, docs and PDFs. Anything else gets bounced back before you even see it.
+      </p>
+      <ul class="mt-6 grid gap-2 font-mono text-sm text-muted">
+        <li><span class="text-lime">✓</span> allowlist, not blocklist</li>
+        <li><span class="text-lime">✓</span> no account, everything stays on your Mac</li>
+        <li><span class="text-lime">✓</span> free during early access</li>
+      </ul>
+      <div class="mt-9">
+        <DownloadCTA />
+      </div>
+    </div>
+    <div class="demo" id="demo">
+      <FakeDesktop />
+    </div>
+  </div>
+</section>
+
+<style>
+  .headline {
+    font-size: clamp(2.6rem, 8.4vw, 7.5rem);
+    line-height: 0.92;
+  }
+  .line {
+    display: block; overflow: hidden;
+    padding: 0 0.04em 0.24em; margin: 0 -0.04em -0.24em;
+  }
+  .line > span { display: inline-block; animation: rise 0.8s cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+  .line:nth-child(1) > span { animation-delay: 0.55s; }
+  .line:nth-child(2) > span { animation-delay: 0.68s; }
+  .line:nth-child(3) > span { animation-delay: 0.81s; }
+  @keyframes rise { from { transform: translateY(105%); } }
+
+  .term { white-space: nowrap; }
+  .typed {
+    display: inline-block; vertical-align: bottom; overflow: hidden; white-space: nowrap;
+    width: 28ch;
+    animation: type 0.9s steps(28) 0.1s both;
+  }
+  @keyframes type { from { width: 0; } }
+  .caret {
+    display: inline-block; width: 0.6ch; height: 1.15em; background: var(--color-lime);
+    vertical-align: text-bottom; margin-left: 2px; animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .intro { animation: fade 0.8s ease 1s both; }
+  .demo { animation: fade-up 0.9s cubic-bezier(0.2, 0.9, 0.2, 1) 1.05s both; }
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .line > span, .typed, .intro, .demo { animation: none; }
+  }
+</style>

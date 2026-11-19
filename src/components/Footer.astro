@@ -1,0 +1,64 @@
+---
+import { site, isPlaceholder } from "../config";
+
+const links = [
+  { label: "Source code", href: site.links.source },
+  { label: "Releases", href: site.links.releases },
+  { label: "Install", href: "#install" },
+];
+const licenseSet = !isPlaceholder(site.license);
+---
+
+<footer class="mt-12 border-t border-line">
+  <div class="mx-auto max-w-[1320px] px-4 pt-16 pb-10 sm:px-8">
+    <p class="wordmark font-extrabold tracking-[-0.05em]" aria-hidden="true">
+      Focus<span class="text-lime">Lock</span>
+    </p>
+
+    <div class="mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+      <nav aria-label="Footer">
+        <ul class="flex flex-wrap gap-x-8 gap-y-3 font-mono text-sm">
+          {
+            links.map((l) =>
+              isPlaceholder(l.href) ? (
+                <li class="text-muted">
+                  {l.label} <span class="soon">soon</span>
+                </li>
+              ) : (
+                <li>
+                  <a class="hover:text-lime" href={l.href}>
+                    {l.label} →
+                  </a>
+                </li>
+              )
+            )
+          }
+        </ul>
+      </nav>
+      <p class="font-mono text-sm text-muted">
+        v{site.version}
+        {
+          licenseSet && (
+            <>
+              {" · "}
+              {isPlaceholder(site.links.licenseText) ? (
+                <span>{site.license} license</span>
+              ) : (
+                <a class="hover:text-lime" href={site.links.licenseText}>
+                  {site.license} license
+                </a>
+              )}
+            </>
+          )
+        }
+        {" · "}built by <span class="text-ink">{site.author}</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .wordmark { font-size: clamp(3.5rem, 17vw, 15rem); line-height: 0.85; padding-bottom: 0.12em; color: #1f1f23; }
+  .wordmark .text-lime { color: var(--color-lime); }
+  .soon { margin-left: 4px; font-size: 10.5px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--color-line); }
+</style>

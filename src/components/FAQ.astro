@@ -1,0 +1,81 @@
+---
+import SectionHead from "./SectionHead.astro";
+import { site } from "../config";
+
+const siteCounts = site.analytics.provider !== "none";
+const faqs = [
+  {
+    q: "Is it free?",
+    a: "Yes, free during early access. No account, no trial timer. If paid features ever come, the version you're using won't stop working.",
+  },
+  {
+    q: "Is it open source?",
+    a: "The source code is available under FSL-1.1-MIT (Functional Source License). You can read it, change it and use it for yourself or your company. The one thing you can't do is ship it as a competing commercial product. Two years after each release, that version becomes plain MIT.",
+  },
+  {
+    q: "Does it collect any data?",
+    a:
+      "The app: no. There's no account and no analytics, and FocusLock never sends anything anywhere. Your settings and stats are plain files in ~/.config/focuslock and ~/.local/share/focuslock. Delete them and they're gone. " +
+      (siteCounts
+        ? "This website counts visits and download clicks anonymously, with no cookies and no personal data. That's all."
+        : "This website doesn't track you either."),
+  },
+  {
+    q: "Why does macOS show a security warning?",
+    a: "FocusLock isn't notarized by Apple yet (that needs a paid developer account). The app is signed, but macOS still blocks the first launch of any un-notarized app you download in a browser. Use the one-line Terminal installer to avoid the warning entirely, or follow the \"Open Anyway\" steps in the install section. Notarization is planned.",
+  },
+  {
+    q: "Which browsers does it check?",
+    a: "Google Chrome for now: FocusLock reads the active tab's address and swaps blocked sites for a \"time left\" page. Other browsers are planned. Until then, leave them off your allowed apps and they'll simply bounce.",
+  },
+  {
+    q: "What permissions does it need?",
+    a: "Only Automation for Google Chrome, so it can read the current tab. Hiding other apps and showing notifications need no special permissions. It never launches Chrome by itself.",
+  },
+  {
+    q: "Can I cheat?",
+    a: "Sure. \"Stop session\" is always one click away, and passes exist for real emergencies. FocusLock adds friction, not handcuffs. Most distractions die in the two seconds it takes to type a reason.",
+  },
+  {
+    q: "Does it work on Intel Macs?",
+    a: `Not yet. FocusLock needs a Mac with ${site.requirements.chip} and macOS ${site.requirements.macos} or later.`,
+  },
+];
+---
+
+<section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 sm:py-32" aria-labelledby="faq-title">
+  <SectionHead num="06" kicker="faq" id="faq-title">
+    Questions, <span class="text-muted">answered.</span>
+  </SectionHead>
+
+  <div class="faq max-w-[880px]">
+    {
+      faqs.map((f) => (
+        <details>
+          <summary>
+            <span>{f.q}</span>
+            <span class="plus" aria-hidden="true" />
+          </summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .faq { border-top: 1px solid var(--color-line); }
+  details { border-bottom: 1px solid var(--color-line); }
+  summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px;
+    padding: 22px 4px; font-size: clamp(1.1rem, 2vw, 1.35rem); font-weight: 700; letter-spacing: -0.015em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--color-lime); }
+  .plus { position: relative; flex: none; width: 18px; height: 18px; }
+  .plus::before, .plus::after { content: ""; position: absolute; left: 0; top: 8px; width: 18px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.2s ease; }
+  .plus::after { transform: rotate(90deg); }
+  details[open] .plus::after { transform: rotate(0deg); }
+  details[open] summary { color: var(--color-lime); }
+  details p { padding: 0 4px 24px; max-width: 68ch; color: var(--color-muted); line-height: 1.65; font-size: 1.05rem; }
+</style>

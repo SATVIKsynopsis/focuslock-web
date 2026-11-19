@@ -1,0 +1,334 @@
+---
+
+type App = { id: string; label: string; kind: "allowed" | "distraction"; icon: string };
+
+const icons = {
+  editor: `<path d="M9 5C7.3 5 6.5 5.9 6.5 7.5v2.2c0 1.2-.7 2-2 2.3 1.3.3 2 1.1 2 2.3v2.2c0 1.6.8 2.5 2.5 2.5M15 5c1.7 0 2.5.9 2.5 2.5v2.2c0 1.2.7 2 2 2.3-1.3.3-2 1.1-2 2.3v2.2c0 1.6-.8 2.5-2.5 2.5"/>`,
+  reader: `<path d="M7 3.5h7l4 4v13H7z"/><path d="M14 3.5v4h4M9.5 11.5h6M9.5 14.5h6M9.5 17.5h3.5"/>`,
+  terminal: `<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m7.5 10 2.5 2.2-2.5 2.3M12.5 15h4"/>`,
+  video: `<rect x="3.5" y="5.5" width="17" height="13" rx="3.5"/><path d="M10.5 9.3v5.4l4.6-2.7z" fill="currentColor"/>`,
+  chat: `<path d="M5 6.5c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2h-6l-4 3.5v-3.5H7c-1.1 0-2-.9-2-2z"/><path d="M9 10.2h.01M12 10.2h.01M15 10.2h.01" stroke-width="2.6"/>`,
+  social: `<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><path d="M16.5 19.6s-3.4-2-3.4-4.2c0-1 .8-1.8 1.8-1.8.7 0 1.3.4 1.6 1 .3-.6.9-1 1.6-1 1 0 1.8.8 1.8 1.8 0 2.2-3.4 4.2-3.4 4.2z" fill="currentColor" stroke="none"/>`,
+};
+
+const apps: App[] = [
+  { id: "editor", label: "Editor", kind: "allowed", icon: icons.editor },
+  { id: "reader", label: "PDF Reader", kind: "allowed", icon: icons.reader },
+  { id: "terminal", label: "Terminal", kind: "allowed", icon: icons.terminal },
+  { id: "video", label: "Video", kind: "distraction", icon: icons.video },
+  { id: "chat", label: "Chat", kind: "distraction", icon: icons.chat },
+  { id: "social", label: "Social", kind: "distraction", icon: icons.social },
+];
+---
+
+<div class="fd" data-fd>
+  <div class="fd-desk" data-desk>
+    <div class="fd-menubar">
+      <span class="fd-mb-app" data-mb-app>Finder</span>
+      <span class="fd-mb-item fd-hide-sm">File</span>
+      <span class="fd-mb-item fd-hide-sm">Edit</span>
+      <span class="fd-mb-item fd-hide-xs">View</span>
+      <span class="fd-mb-spacer"></span>
+      <span class="fd-mb-count" title="Distractions blocked">
+        <span class="fd-hide-sm">distractions blocked:</span><span class="fd-show-sm" aria-hidden="true">✕</span>
+        <b data-count>0</b>
+      </span>
+      <button type="button" class="fd-mb-timer" data-timer-btn title="Open the pass prompt">
+        <span data-pass-chip class="fd-pass-chip" hidden>🎟 <span data-pass>02:00</span></span>
+        <span><span aria-hidden="true">🔒 </span><span data-timer>24:59</span></span>
+        <span class="sr-only">left in the focus session, open the pass prompt</span>
+      </button>
+      <span class="fd-mb-clock fd-hide-xs" data-clock>14:02</span>
+    </div>
+
+    <div class="fd-screen" data-screen>
+      <p class="fd-hint" data-hint aria-hidden="true">
+        <span>Try it:</span> open an app from the dock ↓
+      </p>
+    </div>
+
+    <div class="fd-toasts" data-toasts></div>
+
+    <nav class="fd-dock" aria-label="Demo dock">
+      {
+        apps.map((app, i) => (
+          <>
+            {i === 3 && <span class="fd-dock-sep" aria-hidden="true" />}
+            <button
+              type="button"
+              class={`fd-app fd-app-${app.kind}`}
+              data-app={app.id}
+              data-kind={app.kind}
+              aria-label={`${app.label} (${app.kind === "allowed" ? "allowed" : "distraction"})`}
+            >
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={app.icon} />
+              <span class="fd-app-label" aria-hidden="true">{app.label}</span>
+              <span class="fd-app-dot" aria-hidden="true" />
+            </button>
+          </>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="fd-below">
+    <button type="button" class="fd-need" data-need>I need something else…</button>
+    <span class="fd-legend" aria-hidden="true"><i class="fd-dot-ok"></i>allowed <i class="fd-dot-no"></i>distraction</span>
+  </div>
+
+  <p class="sr-only" aria-live="polite" data-announce></p>
+
+  <dialog class="fd-dialog" data-dialog aria-labelledby="fd-dlg-title" aria-describedby="fd-dlg-desc">
+    <form method="dialog" data-dialog-form>
+      <div class="fd-dlg-icon" aria-hidden="true">🔒</div>
+      <h2 id="fd-dlg-title">Why do you need to leave?</h2>
+      <p id="fd-dlg-desc">
+        A 2-minute pass unblocks everything. <span data-passes-left>3 of 3</span> passes left this session.
+      </p>
+      <label class="sr-only" for="fd-reason">Your reason</label>
+      <input id="fd-reason" data-reason type="text" autocomplete="off" maxlength="140" placeholder="e.g. need the AWS console to check a log" />
+      <p class="fd-dlg-count" data-reason-count aria-live="polite">0 / 10 characters</p>
+      <div class="fd-dlg-actions">
+        <button type="submit" value="cancel" class="fd-btn" formnovalidate>Cancel</button>
+        <button type="submit" value="ok" class="fd-btn fd-btn-primary" data-ok disabled>Get 2-min pass</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template data-tpl="editor">
+    <pre class="fd-code" aria-label="Code editor showing main.rs"><code><span class="l"><i>1</i><b>fn</b> main() {"{"}</span><span class="l"><i>2</i>    <b>let</b> session = Session::start(<em>25</em>);</span><span class="l"><i>3</i>    <b>while</b> session.running() {"{"}</span><span class="l"><i>4</i>        focus(); <u>// you are here</u></span><span class="l"><i>5</i>    {"}"}</span><span class="l"><i>6</i>    ship(<s>"it"</s>);</span><span class="l"><i>7</i>{"}"}<span class="fd-caret"></span></span></code></pre>
+  </template>
+  <template data-tpl="reader">
+    <div class="fd-pdf">
+      <div class="fd-page">
+        <p class="fd-pdf-k">§3 · Memory ordering</p>
+        <p class="fd-pdf-h">Lock-free queues in practice</p>
+        <p class="fd-pdf-t">A consumer must observe the producer's write before it reads the slot. Acquire/release pairs give exactly that guarantee, without a full fence.</p>
+        <span class="fd-bar w-[92%]"></span><span class="fd-bar w-[86%]"></span><span class="fd-bar w-[70%]"></span>
+        <span class="fd-bar w-[90%]"></span><span class="fd-bar w-[40%]"></span>
+      </div>
+    </div>
+  </template>
+  <template data-tpl="terminal">
+    <pre class="fd-term" aria-label="Terminal output"><span><b>$</b> cargo test</span><span class="m">   Compiling focus v0.1.0</span><span class="m">running 17 tests</span><span class="ok">test result: ok. 17 passed</span><span><b>$</b> <span class="fd-caret"></span></span></pre>
+  </template>
+  <template data-tpl="video">
+    <div class="fd-video">
+      <div class="fd-video-frame"><span class="fd-play" aria-hidden="true"></span></div>
+      <div class="fd-video-bar"><span></span></div>
+      <p>Up next: <b>10 hours of rain sounds (autoplay)</b></p>
+    </div>
+  </template>
+  <template data-tpl="chat">
+    <div class="fd-chat">
+      <p class="them">you up? 👀</p>
+      <p class="them">did you see the thing</p>
+      <p class="me">focusing, back in 20</p>
+      <p class="them">@here lunch??</p>
+    </div>
+  </template>
+  <template data-tpl="social">
+    <div class="fd-social">
+      <span>♥ 2.1k</span><span>♥ 318</span><span>♥ 47</span><span>♥ 9.9k</span><span>♥ 702</span><span>♥ 12</span>
+    </div>
+  </template>
+</div>
+
+<style is:global>
+  .fd { container-type: inline-size; position: relative; }
+  .fd-desk {
+    position: relative; aspect-ratio: 16 / 11; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--color-line); isolation: isolate;
+    background:
+      radial-gradient(60% 55% at 70% 40%, rgb(198 255 61 / 0.12), transparent 70%),
+      radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.09) 1px, transparent 0) 0 0 / 18px 18px,
+      #0e0e10;
+    box-shadow: 0 40px 120px -40px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(255 255 255 / 0.02) inset;
+    user-select: none; -webkit-user-select: none;
+  }
+  @container (max-width: 520px) { .fd-desk { aspect-ratio: 4 / 5; } }
+
+  .fd-menubar {
+    position: absolute; inset: 0 0 auto; height: 30px; z-index: 30;
+    display: flex; align-items: center; gap: 14px; padding: 0 12px;
+    background: rgb(20 20 22 / 0.94);
+    border-bottom: 1px solid rgb(255 255 255 / 0.05); font-size: 12.5px; color: var(--color-muted);
+  }
+  .fd-mb-app { color: var(--color-ink); font-weight: 700; }
+  .fd-mb-spacer { flex: 1; }
+  .fd-mb-count { font-family: var(--font-mono); font-size: 11.5px; display: inline-flex; gap: 6px; align-items: center; }
+  .fd-mb-count b { color: var(--color-danger); font-weight: 700; min-width: 1ch; }
+  .fd-mb-timer {
+    display: inline-flex; gap: 8px; align-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 12.5px;
+    color: var(--color-lime); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; cursor: pointer;
+  }
+  .fd-mb-timer:hover { background: rgb(198 255 61 / 0.1); }
+  .fd-pass-chip { color: var(--color-ink); }
+  .fd-mb-clock { font-variant-numeric: tabular-nums; }
+  .fd-show-sm { display: none; }
+  @container (max-width: 640px) { .fd-hide-sm { display: none; } .fd-show-sm { display: inline; } }
+  @container (max-width: 420px) { .fd-hide-xs { display: none; } .fd-menubar { gap: 10px; } }
+
+  .fd-screen { position: absolute; inset: 30px 0 0; }
+  .fd-hint {
+    position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); margin: 0;
+    font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); white-space: nowrap;
+    transition: opacity 0.3s;
+  }
+  .fd-hint span { color: var(--color-lime); }
+  .fd-hint.is-gone { opacity: 0; }
+
+  .fd-win {
+    position: absolute; width: 60%; height: 58%; min-width: 220px; display: flex; flex-direction: column;
+    background: #161618; border: 1px solid #303035; border-radius: 11px; overflow: hidden;
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.85);
+  }
+  .fd-win.is-front { border-color: #3a3a40; }
+  .fd-win-bar {
+    flex: none; height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 10px;
+    background: #1e1e21; border-bottom: 1px solid #2a2a2e; cursor: grab; touch-action: none;
+  }
+  .fd-win-bar:active { cursor: grabbing; }
+  .fd-lights { display: flex; gap: 6px; }
+  .fd-lights > * { width: 11px; height: 11px; border-radius: 50%; background: #3a3a40; }
+  .fd-win.is-front .fd-lights > :nth-child(1) { background: #ff5f57; }
+  .fd-win.is-front .fd-lights > :nth-child(2) { background: #febc2e; }
+  .fd-win.is-front .fd-lights > :nth-child(3) { background: #28c840; }
+  .fd-close { padding: 0; border: 0; cursor: pointer; }
+  .fd-close:focus-visible { outline-offset: 2px; }
+  .fd-win-title { flex: 1; text-align: center; font-size: 11.5px; color: var(--color-muted); margin-right: 45px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fd-win-body { flex: 1; overflow: hidden; }
+  @container (max-width: 520px) {
+    .fd-win { width: 92% !important; left: 4% !important; height: 52%; }
+    .fd-win-bar { cursor: default; }
+  }
+
+  .fd-code, .fd-term { margin: 0; padding: 12px 14px; font: 12px/1.75 var(--font-mono); color: #d6d6d2; }
+  .fd-code .l, .fd-term > span { display: block; white-space: pre; }
+  .fd-code i { font-style: normal; color: #4a4a50; display: inline-block; width: 2ch; margin-right: 1.5ch; text-align: right; }
+  .fd-code b { color: var(--color-lime); font-weight: 600; }
+  .fd-code em { font-style: normal; color: #ffb38a; }
+  .fd-code s { text-decoration: none; color: #ffb38a; }
+  .fd-code u { text-decoration: none; color: #8e8e94; font-style: italic; }
+  .fd-win.is-new .fd-code .l { animation: fd-type 0.35s both; }
+  .fd-win.is-new .fd-code .l:nth-child(2) { animation-delay: 0.12s; }
+  .fd-win.is-new .fd-code .l:nth-child(3) { animation-delay: 0.24s; }
+  .fd-win.is-new .fd-code .l:nth-child(4) { animation-delay: 0.36s; }
+  .fd-win.is-new .fd-code .l:nth-child(5) { animation-delay: 0.48s; }
+  .fd-win.is-new .fd-code .l:nth-child(6) { animation-delay: 0.6s; }
+  .fd-win.is-new .fd-code .l:nth-child(7) { animation-delay: 0.72s; }
+  @keyframes fd-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .fd-caret { display: inline-block; width: 7px; height: 14px; background: var(--color-lime); vertical-align: -2px; margin-left: 2px; animation: fd-blink 1s steps(1) infinite; }
+  @keyframes fd-blink { 50% { opacity: 0; } }
+  .fd-term b { color: var(--color-lime); }
+  .fd-term .m { color: var(--color-muted); }
+  .fd-term .ok { color: #9be36d; }
+
+  .fd-pdf { height: 100%; background: #26262a; padding: 14px; display: grid; place-items: start center; overflow: hidden; }
+  .fd-page { width: min(100%, 300px); background: #f4f3ee; color: #222; border-radius: 3px; padding: 16px 18px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.4); }
+  .fd-pdf-k { margin: 0; font: 600 9px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: #777; }
+  .fd-pdf-h { margin: 4px 0 8px; font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .fd-pdf-t { margin: 0 0 10px; font-size: 10.5px; line-height: 1.55; color: #444; }
+  .fd-bar { display: block; height: 5px; background: #d9d8d2; border-radius: 3px; margin-top: 6px; }
+
+  .fd-video { height: 100%; background: #0b0b0c; display: flex; flex-direction: column; gap: 8px; padding: 10px; }
+  .fd-video-frame { flex: 1; border-radius: 6px; background: linear-gradient(135deg, #2b1b16, #12121a); display: grid; place-items: center; }
+  .fd-play { width: 0; height: 0; border-left: 22px solid #fff; border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 6px; opacity: 0.85; }
+  .fd-video-bar { height: 3px; background: #333; border-radius: 2px; }
+  .fd-video-bar span { display: block; width: 37%; height: 100%; background: var(--color-danger); border-radius: 2px; }
+  .fd-video p { margin: 0; font-size: 11px; color: var(--color-muted); }
+  .fd-video b { color: var(--color-ink); font-weight: 600; }
+
+  .fd-chat { display: flex; flex-direction: column; gap: 6px; padding: 12px; font-size: 12px; }
+  .fd-chat p { margin: 0; padding: 6px 10px; border-radius: 12px; max-width: 75%; }
+  .fd-chat .them { background: #26262a; align-self: flex-start; }
+  .fd-chat .me { background: #2f3d14; color: #e9ffc0; align-self: flex-end; }
+
+  .fd-social { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px; height: 100%; }
+  .fd-social span { border-radius: 6px; background: linear-gradient(160deg, #2a2a30, #1b1b1f); display: flex; align-items: flex-end; padding: 6px; font: 600 10px var(--font-mono); color: #ff8f7a; }
+
+  .fd-toasts { position: absolute; top: 40px; right: 10px; z-index: 40; display: grid; gap: 8px; width: min(270px, calc(100% - 20px)); pointer-events: none; }
+  .fd-toast {
+    display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: center;
+    background: rgb(36 36 40 / 0.97);
+    border: 1px solid rgb(255 255 255 / 0.08); border-radius: 12px; padding: 9px 12px; font-size: 12px; line-height: 1.35;
+    box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.7); animation: fd-toast-in 0.35s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+  }
+  .fd-toast.is-out { animation: fd-toast-out 0.3s ease-in both; }
+  .fd-toast-icon { width: 28px; height: 28px; border-radius: 7px; background: #0a0a0b; display: grid; place-items: center; font-size: 14px; }
+  .fd-toast b { display: block; color: var(--color-ink); }
+  .fd-toast span { color: #b5b5b8; }
+  .fd-toast.is-nope .fd-toast-icon { box-shadow: 0 0 0 1.5px var(--color-danger); }
+  .fd-toast.is-ok .fd-toast-icon { box-shadow: 0 0 0 1.5px var(--color-lime); }
+  @keyframes fd-toast-in { from { opacity: 0; transform: translateX(30px); } }
+  @keyframes fd-toast-out { to { opacity: 0; transform: translateX(30px); } }
+
+  .fd-dock {
+    position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 35;
+    display: flex; align-items: flex-end; gap: 6px; padding: 6px 8px;
+    background: rgb(28 28 31 / 0.94);
+    border: 1px solid rgb(255 255 255 / 0.08); border-radius: 18px;
+  }
+  .fd-dock-sep { width: 1px; align-self: stretch; margin: 6px 3px; background: rgb(255 255 255 / 0.12); }
+  .fd-app {
+    position: relative; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(180deg, #2a2a2f, #1d1d21); border: 1px solid rgb(255 255 255 / 0.07);
+    color: var(--color-ink); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .fd-app:hover { transform: translateY(-4px) scale(1.06); }
+  .fd-app-allowed:hover, .fd-app-allowed:focus-visible { box-shadow: 0 0 0 2px var(--color-lime); }
+  .fd-app-distraction:hover, .fd-app-distraction:focus-visible { box-shadow: 0 0 0 2px var(--color-danger); }
+  .fd-app:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 3px; border-radius: 12px; }
+  .fd-app-label {
+    position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+    background: rgb(36 36 40 / 0.95); border: 1px solid rgb(255 255 255 / 0.08); border-radius: 6px;
+    padding: 2px 8px; font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.12s;
+  }
+  .fd-app:hover .fd-app-label, .fd-app:focus-visible .fd-app-label { opacity: 1; }
+  .fd-app-dot { position: absolute; bottom: -5px; width: 4px; height: 4px; border-radius: 50%; background: var(--color-ink); opacity: 0; }
+  .fd-app.is-open .fd-app-dot { opacity: 0.8; }
+  @container (max-width: 420px) {
+    .fd-dock { gap: 4px; padding: 5px 6px; }
+    .fd-app { width: 44px; height: 44px; }
+  }
+
+  .fd-below { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .fd-need {
+    font: 600 13.5px var(--font-mono); color: var(--color-ink); background: var(--color-surface);
+    border: 1px dashed #45454c; padding: 9px 14px; border-radius: 10px; cursor: pointer;
+  }
+  .fd-need:hover { border-color: var(--color-lime); color: var(--color-lime); }
+  .fd-need:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--color-line); color: var(--color-muted); }
+  .fd-legend { font: 11.5px var(--font-mono); color: var(--color-muted); display: inline-flex; align-items: center; gap: 6px; }
+  .fd-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-left: 6px; }
+  .fd-dot-ok { box-shadow: 0 0 0 2px var(--color-lime) inset; }
+  .fd-dot-no { box-shadow: 0 0 0 2px var(--color-danger) inset; }
+
+  .fd-dialog {
+    margin: auto; width: min(360px, calc(100vw - 32px)); padding: 22px; border-radius: 16px; text-align: center;
+    background: #222226; color: var(--color-ink); border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.9);
+  }
+  .fd-dialog[open] { animation: fd-pop 0.22s cubic-bezier(0.2, 1.2, 0.4, 1); }
+  @keyframes fd-pop { from { opacity: 0; transform: scale(0.94); } }
+  .fd-dialog::backdrop { background: rgb(0 0 0 / 0.55); backdrop-filter: blur(3px); }
+  .fd-dlg-icon { font-size: 34px; }
+  .fd-dialog h2 { margin: 8px 0 6px; font-size: 15px; font-weight: 700; }
+  .fd-dialog p { margin: 0; font-size: 12.5px; color: #b5b5b8; line-height: 1.45; }
+  .fd-dialog input {
+    width: 100%; margin-top: 14px; padding: 8px 10px; border-radius: 7px; border: 1px solid #45454c;
+    background: #161618; color: var(--color-ink); font: 13px var(--font-sans);
+  }
+  .fd-dialog input:focus { outline: none; border-color: var(--color-lime); box-shadow: 0 0 0 3px rgb(198 255 61 / 0.2); }
+  .fd-dlg-count { margin-top: 6px !important; font: 11px var(--font-mono) !important; text-align: right; }
+  .fd-dlg-count.is-ok { color: var(--color-lime) !important; }
+  .fd-dlg-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .fd-btn { padding: 7px 10px; border-radius: 8px; border: 1px solid #45454c; background: #2e2e33; color: var(--color-ink); font: 600 13px var(--font-sans); cursor: pointer; }
+  .fd-btn-primary { background: var(--color-lime); border-color: var(--color-lime); color: var(--color-bg); }
+  .fd-btn-primary:disabled { background: #2e2e33; border-color: #45454c; color: #8e8e94; cursor: not-allowed; }
+</style>
+
+<script>
+  import { initDesktop } from "../scripts/desktop";
+  for (const root of document.querySelectorAll<HTMLElement>("[data-fd]")) initDesktop(root);
+</script>

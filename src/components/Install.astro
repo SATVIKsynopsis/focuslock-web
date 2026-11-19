@@ -1,0 +1,149 @@
+---
+import SectionHead from "./SectionHead.astro";
+import CopyCommand from "./CopyCommand.astro";
+import DownloadCTA from "./DownloadCTA.astro";
+import { site, isPlaceholder } from "../config";
+
+const script = site.links.installScript;
+const origin = !isPlaceholder(site.url) ? site.url : import.meta.env.DEV ? Astro.url.origin : null;
+const scriptUrl = isPlaceholder(script) ? null : /^https?:/.test(script) ? script : origin ? origin + script : null;
+const scriptReady = scriptUrl !== null;
+const installCmd = `curl -fsSL ${scriptUrl ?? "https://…/install.sh"} | bash`;
+const xattrCmd = "xattr -dr com.apple.quarantine /Applications/FocusLock.app";
+---
+
+<section id="install" class="mx-auto max-w-[1320px] scroll-mt-8 px-4 py-24 sm:px-8 sm:py-32" aria-labelledby="install-title">
+  <SectionHead num="05" kicker="install" id="install-title">
+    Install in <span class="text-lime">ten seconds.</span>
+  </SectionHead>
+
+  <p class="nonmac-banner mb-8 rounded-xl border border-line bg-surface px-5 py-4 text-muted" data-nonmac hidden>
+    <strong class="text-ink">FocusLock is macOS-only for now.</strong> These steps are for a Mac with Apple Silicon running macOS {site.requirements.macos} or later.
+  </p>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <article class="opt opt-main" aria-labelledby="opt1-title">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p class="opt-num">option 1</p>
+        <span class="badge">recommended · no warning</span>
+      </div>
+      <h3 id="opt1-title">One line in Terminal</h3>
+      <p class="text-muted">Paste this into Terminal. It downloads FocusLock, verifies its checksum and signature, puts it in Applications and opens it.</p>
+      <CopyCommand command={installCmd} label="install command" disabled={!scriptReady} track="copy-install-command" />
+      <pre class="run" aria-label="Example output"><span class="dim">$ curl -fsSL …/install.sh | bash</span>
+<span class="ok">==&gt;</span> Downloading FocusLock…
+<span class="ok">==&gt;</span> Verifying checksum…
+<span class="ok">==&gt;</span> Installing to /Applications/FocusLock.app…
+<span class="ok">==&gt;</span> Installed FocusLock {site.version}.
+<span class="ok">==&gt;</span> Launched. Look for 🎯 in your menu bar.</pre>
+      <ul class="checks">
+        <li>Checks the SHA-256 and the code signature before installing</li>
+        <li>Replaces an older version (and quits it first)</li>
+        <li>Uninstall: quit FocusLock, delete it from Applications</li>
+      </ul>
+      <p class="small">
+        Why no warning? macOS only flags files downloaded by a browser. {
+          scriptReady ? (
+            <a href={script} class="link">Read the script first</a>
+          ) : (
+            <span>The script will be linked here so you can read it first.</span>
+          )
+        }
+      </p>
+    </article>
+
+    <article class="opt" aria-labelledby="opt2-title">
+      <p class="opt-num">option 2</p>
+      <h3 id="opt2-title">Download the app</h3>
+      <DownloadCTA />
+
+      <div class="headsup" role="note" aria-labelledby="headsup-title">
+        <p id="headsup-title" class="headsup-title"><span aria-hidden="true">⚠</span> Heads-up: macOS will show a warning</p>
+        <p class="small">FocusLock isn't notarized by Apple yet, so the first launch is blocked. That's expected. Here's how to open it:</p>
+
+        <ol class="steps">
+          <li><span class="sn">1</span><div>Open the DMG and drag <b>FocusLock</b> onto <b>Applications</b>.</div></li>
+          <li>
+            <span class="sn">2</span>
+            <div>
+              Open FocusLock. You'll see this. Click <b>Done</b>.
+              <div class="mock" aria-hidden="true">
+                <div class="mock-icon">⚠</div>
+                <p class="mock-title">"FocusLock" Not Opened</p>
+                <p class="mock-text">Apple could not verify "FocusLock" is free of malware that may harm your Mac or compromise your privacy.</p>
+                <div class="mock-btns"><span class="is-click">Done</span><span>Move to Trash</span></div>
+              </div>
+              <p class="small mt-2"><b class="text-ink">"Done" only closes the warning.</b> Nothing opens yet, which is normal.</p>
+            </div>
+          </li>
+          <li><span class="sn">3</span><div>Open <b>System Settings → Privacy &amp; Security</b>, scroll to the bottom, and click <b>Open Anyway</b> next to FocusLock. Confirm with your password or Touch ID.</div></li>
+          <li>
+            <span class="sn">or</span>
+            <div class="min-w-0 flex-1">
+              Skip steps 2–3 with one command:
+              <div class="mt-2"><CopyCommand command={xattrCmd} label="remove quarantine command" /></div>
+            </div>
+          </li>
+        </ol>
+        <p class="small">You only do this once. (Right-click → Open no longer works on macOS 15 and later.)</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="after">
+    <span class="after-icon" aria-hidden="true">🔓</span>
+    <div>
+      <h3 class="text-lg font-bold">Last step, either way: let it check Chrome</h3>
+      <p class="text-muted">
+        On your first session, macOS asks whether FocusLock may control Google Chrome. Click <b class="text-ink">OK</b>.
+        Missed it? <b class="text-ink">System Settings → Privacy &amp; Security → Automation → FocusLock</b> → turn on Google Chrome.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .opt { display: flex; flex-direction: column; gap: 14px; min-width: 0; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 18px; padding: 26px; }
+  .opt-main { border-color: rgb(198 255 61 / 0.35); box-shadow: 0 0 0 1px rgb(198 255 61 / 0.08) inset, 0 30px 80px -50px rgb(198 255 61 / 0.35); }
+  .opt-num { font: 700 12px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-lime); }
+  .badge { font: 600 11px var(--font-mono); color: var(--color-bg); background: var(--color-lime); padding: 3px 9px; border-radius: 999px; }
+  h3 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.025em; }
+  .small { font-size: 0.875rem; color: var(--color-muted); line-height: 1.55; }
+  .run {
+    margin: 0; padding: 14px 16px; border-radius: 12px; background: #08080a; border: 1px solid #222226;
+    font: 12.5px/1.75 var(--font-mono); color: #c9c9cc; overflow-x: auto;
+  }
+  .run .dim { color: var(--color-muted); }
+  .run .ok { color: var(--color-lime); font-weight: 700; }
+  .checks { display: grid; gap: 6px; font-size: 0.9rem; color: var(--color-muted); }
+  .checks li::before { content: "✓  "; color: var(--color-lime); font-family: var(--font-mono); }
+  .link { color: var(--color-lime); text-decoration: underline; text-underline-offset: 3px; }
+
+  .headsup { margin-top: 10px; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: 12px; border: 1px solid rgb(255 77 46 / 0.35); background: rgb(255 77 46 / 0.05); border-radius: 14px; padding: 18px; }
+  .headsup-title { font-weight: 700; color: #ffb4a6; }
+  .steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .steps li > div { min-width: 0; }
+  .steps li { display: flex; gap: 12px; align-items: flex-start; line-height: 1.5; font-size: 0.95rem; color: #c9c9cc; }
+  .steps b { color: var(--color-ink); }
+  .sn { flex: none; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; font: 700 11.5px var(--font-mono); color: var(--color-bg); background: var(--color-ink); }
+  .steps li:last-child .sn { background: var(--color-surface-2); color: var(--color-muted); border: 1px solid var(--color-line); }
+
+  .mock { margin-top: 10px; max-width: 270px; padding: 16px; border-radius: 14px; text-align: center; background: #2a2a2e; border: 1px solid #3a3a40; box-shadow: 0 14px 40px -14px rgb(0 0 0 / 0.8); }
+  .mock-icon { font-size: 26px; color: #febc2e; }
+  .mock-title { font-weight: 700; font-size: 13.5px; color: var(--color-ink); margin-top: 4px; }
+  .mock-text { font-size: 11.5px; color: #b5b5b8; margin-top: 4px; line-height: 1.4; }
+  .mock-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; font-size: 12px; font-weight: 600; }
+  .mock-btns span { padding: 6px; border-radius: 8px; background: #3a3a40; color: #d6d6d2; }
+  .mock-btns .is-click { box-shadow: 0 0 0 2px var(--color-lime); color: var(--color-ink); }
+
+  .after { display: flex; gap: 16px; align-items: flex-start; margin-top: 16px; padding: 22px 26px; border-radius: 18px; border: 1px dashed #3a3a40; }
+  .after-icon { font-size: 26px; }
+</style>
+
+<script>
+  const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+  const platform = nav.userAgentData?.platform || navigator.platform || navigator.userAgent;
+  if (!(/mac/i.test(platform) && navigator.maxTouchPoints < 2)) {
+    document.querySelector<HTMLElement>("[data-nonmac]")!.hidden = false;
+  }
+</script>

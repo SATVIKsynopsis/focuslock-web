@@ -1,0 +1,71 @@
+---
+interface Props {
+  command: string;
+  label: string;
+  disabled?: boolean;
+  track?: string;
+}
+const { command, label, disabled = false, track } = Astro.props;
+---
+
+<div class:list={["cmd", { "is-disabled": disabled }]}>
+  <code class="cmd-text"><span class="cmd-prompt" aria-hidden="true">$</span>{command}</code>
+  {
+    disabled ? (
+      <span class="cmd-soon">Coming soon</span>
+    ) : (
+      <button type="button" class="cmd-copy" data-copy={command} data-track={track} aria-label={`Copy: ${label}`}>
+        <span data-copy-label>Copy</span>
+      </button>
+    )
+  }
+</div>
+
+<style>
+  .cmd {
+    display: flex; align-items: center; gap: 12px; min-width: 0;
+    background: #08080a; border: 1px solid var(--color-line); border-radius: 12px; padding: 10px 10px 10px 16px;
+  }
+  .cmd-text {
+    flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: thin;
+    font: 500 13.5px/1.6 var(--font-mono); color: var(--color-ink); padding: 4px 0;
+  }
+  .cmd-prompt { color: var(--color-lime); margin-right: 1ch; user-select: none; }
+  .cmd-copy {
+    flex: none; font: 600 12.5px var(--font-mono); padding: 7px 12px; border-radius: 8px; cursor: pointer;
+    background: var(--color-surface-2); border: 1px solid var(--color-line); color: var(--color-ink);
+    min-width: 72px;
+  }
+  .cmd-copy:hover { border-color: var(--color-lime); color: var(--color-lime); }
+  .cmd-copy.is-copied { background: var(--color-lime); color: var(--color-bg); border-color: var(--color-lime); }
+  .cmd-soon { flex: none; font: 600 11.5px var(--font-mono); color: var(--color-muted); padding: 7px 10px; }
+  .cmd.is-disabled .cmd-text { color: var(--color-muted); }
+</style>
+
+<script>
+  document.addEventListener("click", async (e) => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>("[data-copy]");
+    if (!btn) return;
+    const text = btn.dataset.copy!;
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch {
+      const ta = Object.assign(document.createElement("textarea"), { value: text });
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.append(ta);
+      ta.select();
+      ok = document.execCommand("copy");
+      ta.remove();
+    }
+    const label = btn.querySelector<HTMLElement>("[data-copy-label]")!;
+    label.textContent = ok ? "Copied ✓" : "Press ⌘C";
+    btn.classList.toggle("is-copied", ok);
+    setTimeout(() => {
+      label.textContent = "Copy";
+      btn.classList.remove("is-copied");
+    }, 1800);
+  });
+</script>
