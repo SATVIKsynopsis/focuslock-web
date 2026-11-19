@@ -13,9 +13,9 @@ export const site = {
   links: {
     download: "/download/FocusLock.dmg",
     installScript: "/download/install.sh",
-    source: "TODO_SOURCE_URL",
-    releases: "TODO_RELEASES_URL",
-    licenseText: "https://fsl.software/",
+    source: "https://github.com/SATVIKsynopsis/focuslock",
+    releases: "https://github.com/SATVIKsynopsis/focuslock/releases",
+    licenseText: "https://github.com/SATVIKsynopsis/focuslock/blob/main/LICENSE.md",
   },
 
   analytics: {
